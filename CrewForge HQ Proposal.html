@@ -1,0 +1,617 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>CrewForge HQ Proposal</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one narrow reading column, a sticky name bar, a hero that opens on the broken trial link itself,
+   findings as a ledger, phases as a vertical rail, a week-by-week bar for the timeline. */
+:root {
+  --bg: #eef2f4;
+  --surface: #ffffff;
+  --ink: #0f1a22;
+  --muted: #55646f;
+  --line: #d3dde3;
+  --accent: #0b7f72;
+  --accent-ink: #ffffff;
+  --accent-soft: #d8efec;
+  --crit: #b3261e;
+  --crit-soft: #f8dedc;
+  --high: #9a5b00;
+  --high-soft: #f8e9cc;
+  --low: #3b6b3f;
+  --low-soft: #dcecdc;
+  --code-bg: #101d26;
+  --code-ink: #cfe6e1;
+  --f-display: "Bricolage Grotesque", "Trebuchet MS", sans-serif;
+  --f-body: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d151b; --surface: #15212a; --ink: #e8f0f3; --muted: #9bb0bb; --line: #263743;
+    --accent: #3fc7b5; --accent-ink: #06201c; --accent-soft: #123a36;
+    --crit: #ff8f86; --crit-soft: #40201e; --high: #f0bf6a; --high-soft: #3a2d12;
+    --low: #8fd194; --low-soft: #1b3320; --code-bg: #0a1117; --code-ink: #cfe6e1;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d151b; --surface: #15212a; --ink: #e8f0f3; --muted: #9bb0bb; --line: #263743;
+  --accent: #3fc7b5; --accent-ink: #06201c; --accent-soft: #123a36;
+  --crit: #ff8f86; --crit-soft: #40201e; --high: #f0bf6a; --high-soft: #3a2d12;
+  --low: #8fd194; --low-soft: #1b3320; --code-bg: #0a1117; --code-ink: #cfe6e1;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 16px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--bg); }
+.wrap { max-width: 880px; margin: 0 auto; }
+h1, h2, h3 { font-family: var(--f-display); line-height: 1.1; text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+p { margin: 0 0 1em; max-width: 65ch; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.mono { font-family: var(--f-mono); }
+.label { font-family: var(--f-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+header.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--bg);
+  border-bottom: 1px solid var(--line); margin: 0 calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
+  padding-inline: max(16px, env(safe-area-inset-left, 0px));
+}
+.bar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 12px; flex-wrap: wrap; }
+.bar strong { font-family: var(--f-display); font-size: 15px; }
+.bar nav { display: flex; gap: 18px; flex-wrap: wrap; font-size: 14px; }
+.bar nav a { color: var(--muted); text-decoration: none; }
+.bar nav a:hover { color: var(--accent); }
+
+section { padding-block: 56px 8px; scroll-margin-top: 70px; }
+section > h2 { font-size: clamp(26px, 4vw, 36px); margin-bottom: 14px; }
+.lede { color: var(--muted); font-size: 17px; }
+
+/* Hero */
+.hero { padding-block: 48px 8px; }
+.hero h1 { font-size: clamp(34px, 6.4vw, 60px); font-weight: 800; margin: 12px 0 18px; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.hero .from { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 22px; font-size: 14px; color: var(--muted); }
+.rise { animation: rise .7s ease-out both; }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+.code {
+  background: var(--code-bg); color: var(--code-ink); border-radius: 10px; padding: 16px 18px;
+  font-family: var(--f-mono); font-size: 13px; line-height: 1.7; overflow-x: auto; margin: 26px 0 0;
+}
+.code .k { color: #7fd6c9; } .code .bad { color: #ff9d94; } .code .dim { color: #7b95a2; }
+.code .row { white-space: nowrap; }
+.pulse { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ff9d94; margin-right: 8px; animation: pulse 1.8s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(255,157,148,.5); } 50% { box-shadow: 0 0 0 7px rgba(255,157,148,0); } }
+
+/* Findings ledger */
+.ledger { border-top: 1px solid var(--line); margin-top: 18px; }
+.item { display: grid; grid-template-columns: 92px 1fr; gap: 6px 20px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+.item h3 { font-size: 18px; margin-bottom: 4px; }
+.item p { margin: 0; color: var(--muted); font-size: 15px; }
+.pill { display: inline-block; align-self: start; justify-self: start; font-family: var(--f-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; padding: 4px 9px; border-radius: 99px; font-weight: 500; }
+.pill.crit { background: var(--crit-soft); color: var(--crit); }
+.pill.high { background: var(--high-soft); color: var(--high); }
+.pill.low { background: var(--low-soft); color: var(--low); }
+.item > div { min-width: 0; }
+
+/* Phases */
+.phases { display: grid; gap: 0; margin-top: 20px; position: relative; }
+.phase { display: grid; grid-template-columns: 56px 1fr; gap: 0 18px; padding-bottom: 28px; position: relative; }
+.phase:not(:last-child)::before { content: ""; position: absolute; left: 27px; top: 54px; bottom: 0; width: 2px; background: var(--line); }
+.badge {
+  width: 56px; height: 56px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center;
+  font-family: var(--f-display); font-weight: 800; font-size: 22px;
+}
+.phase .when { font-family: var(--f-mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.phase h3 { font-size: 22px; margin: 2px 0 8px; }
+.phase ul { margin: 0; padding-left: 18px; color: var(--ink); }
+.phase li { margin-bottom: 6px; max-width: 65ch; }
+.phase > div { min-width: 0; }
+
+/* Timeline bars */
+.tl { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; margin-top: 18px; overflow-x: auto; }
+.tl-grid { min-width: 520px; display: grid; grid-template-columns: 150px repeat(6, 1fr); row-gap: 10px; align-items: center; }
+.tl-head { font-family: var(--f-mono); font-size: 12px; color: var(--muted); text-align: center; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+.tl-name { font-size: 14px; font-weight: 600; padding-right: 8px; }
+.tl-bar { height: 22px; border-radius: 6px; background: var(--accent); }
+.tl-bar.soft { background: repeating-linear-gradient(135deg, var(--accent) 0 8px, var(--accent-soft) 8px 16px); }
+
+/* Investment */
+.fees { margin-top: 18px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); overflow: hidden; }
+.fee { display: flex; justify-content: space-between; gap: 16px; padding: 16px 20px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.fee:last-child { border-bottom: 0; }
+.fee span:first-child { font-weight: 600; }
+.fee .tbc { font-family: var(--f-mono); font-size: 13px; color: var(--muted); }
+.note { font-size: 14px; color: var(--muted); margin-top: 14px; }
+
+/* About + CTA */
+.about { display: grid; grid-template-columns: 1fr; gap: 14px; }
+.cta {
+  margin-top: 56px; padding: 32px; border-radius: 16px; color: var(--ink);
+  background: linear-gradient(135deg, var(--accent-soft), var(--surface)); border: 1px solid var(--line);
+  backdrop-filter: blur(8px);
+}
+.cta h2 { font-size: clamp(26px, 4vw, 34px); margin-bottom: 10px; }
+.btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+.btn { display: inline-block; padding: 12px 20px; border-radius: 10px; font-weight: 600; text-decoration: none; font-size: 15px; }
+.btn.main { background: var(--accent); color: var(--accent-ink); }
+.btn.alt { border: 1.5px solid var(--accent); color: var(--accent); }
+.contact { margin-top: 18px; font-family: var(--f-mono); font-size: 13px; color: var(--muted); }
+footer { padding-block: 32px 40px; font-size: 13px; color: var(--muted); }
+
+
+/* Glance strip */
+.glance { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin-top: 24px; }
+.glance div { background: var(--surface); padding: 14px 16px; min-width: 0; }
+.glance b { display: block; font-family: var(--f-display); font-size: 26px; line-height: 1.1; }
+.glance span { font-size: 13px; color: var(--muted); }
+/* Work */
+.closest { margin-top: 22px; }
+.cgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-top: 10px; }
+.cgrid a { display: block; background: var(--accent-soft); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; text-decoration: none; color: var(--ink); min-width: 0; }
+.cgrid a:hover { border-color: var(--accent); }
+.cgrid b { display: block; font-family: var(--f-display); font-size: 17px; }
+.cgrid span { font-size: 13px; color: var(--muted); }
+.wall { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 28px 32px; margin-top: 30px; }
+.wgroup { min-width: 0; }
+.wgroup h3 { font-size: 19px; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+.cnt { font-family: var(--f-mono); font-size: 12px; font-weight: 500; background: var(--accent-soft); color: var(--accent); padding: 2px 8px; border-radius: 99px; }
+.wgroup ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.wgroup li { border-bottom: 1px solid var(--line); }
+.wgroup li a { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 12px; padding: 9px 2px; text-decoration: none; color: var(--ink); }
+.wgroup li a:hover .pn { color: var(--accent); }
+.pn { font-weight: 600; font-size: 15px; overflow-wrap: anywhere; }
+.pd { font-size: 12.5px; color: var(--muted); text-align: right; align-self: center; }
+.pu { grid-column: 1 / -1; font-family: var(--f-mono); font-size: 11.5px; color: var(--muted); overflow-wrap: anywhere; }
+
+/* Hero 3D */
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 24px; align-items: center; }
+.hero-copy { min-width: 0; }
+.hero h1 { font-size: clamp(32px, 5vw, 50px); }
+.stage { position: relative; min-height: 400px; border-radius: 20px; background: radial-gradient(circle at 50% 42%, var(--accent-soft), transparent 68%); min-width: 0; }
+.stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.stage-cap { position: absolute; left: 0; right: 0; bottom: 6px; text-align: center; font-size: 10.5px; }
+/* Layers */
+.layers { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: center; margin-top: 12px; }
+.stackwrap { perspective: 1500px; height: 400px; display: grid; place-items: center; overflow: hidden; border-radius: 18px; background: var(--surface); border: 1px solid var(--line); }
+.stack { position: relative; width: 240px; height: 240px; transform-style: preserve-3d; transform: rotateX(58deg) rotateZ(-38deg) translateY(10px); }
+.plate { position: absolute; inset: 0; border-radius: 16px; border: 2px solid; transform: translateZ(calc(var(--i) * 22px)); transition: transform .7s cubic-bezier(.2,.8,.2,1); display: flex; align-items: flex-end; justify-content: flex-start; padding: 12px 16px; box-shadow: 6px 8px 0 rgba(0,0,0,.08); }
+.plate b { font-family: var(--f-display); font-size: 40px; line-height: 1; }
+.p1 { background: var(--crit-soft); border-color: var(--crit); color: var(--crit); }
+.p2 { background: var(--high-soft); border-color: var(--high); color: var(--high); }
+.p3 { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.p4 { background: var(--low-soft); border-color: var(--low); color: var(--low); }
+.stack.spread .plate { transform: translateZ(calc(var(--i) * 78px)); }
+.legend ol { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--line); }
+.legend li { display: grid; gap: 2px; padding: 12px 2px; border-bottom: 1px solid var(--line); }
+.legend li b { font-family: var(--f-display); font-size: 18px; }
+.legend li span { color: var(--muted); font-size: 14px; }
+/* Phase done blocks */
+.done { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px 24px; margin-top: 14px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.done > div { min-width: 0; }
+.done b { font-family: var(--f-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.done p { margin: 4px 0 0; font-size: 14.5px; color: var(--ink); }
+/* Week one */
+.days { list-style: none; margin: 18px 0 0; padding: 0; border-top: 1px solid var(--line); }
+.days li { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 4px 20px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.days .d { font-family: var(--f-mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); padding-top: 4px; }
+.days h3 { font-size: 18px; margin-bottom: 4px; }
+.days p { margin: 0; color: var(--muted); font-size: 15px; }
+/* How / risks / faq */
+.howgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 18px; perspective: 900px; }
+.howgrid > div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; min-width: 0; transition: transform .25s ease, box-shadow .25s ease; }
+.howgrid > div:hover { transform: translateY(-4px) rotateX(4deg); box-shadow: 0 14px 26px rgba(15, 26, 34, .12); }
+.howgrid h3 { font-size: 17px; margin-bottom: 4px; }
+.howgrid p { margin: 0; font-size: 14.5px; color: var(--muted); }
+.risks { display: grid; gap: 0; margin-top: 18px; border-top: 1px solid var(--line); }
+.r { padding: 14px 0; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 4px 24px; }
+.r b { font-family: var(--f-display); font-size: 16px; }
+.r p { margin: 0; color: var(--muted); font-size: 15px; }
+.faq { margin: 18px 0 0; border-top: 1px solid var(--line); }
+.faq dt { font-family: var(--f-display); font-weight: 700; font-size: 18px; padding-top: 16px; }
+.faq dd { margin: 4px 0 0; padding-bottom: 16px; border-bottom: 1px solid var(--line); color: var(--muted); max-width: 65ch; }
+.cgrid a { transform-style: preserve-3d; transition: transform .15s ease-out, border-color .2s; will-change: transform; }
+@media (max-width: 760px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .stage { min-height: 340px; }
+  .layers { grid-template-columns: 1fr; }
+  .r { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .days li { grid-template-columns: 1fr; }
+  .stackwrap { height: 320px; }
+  .stack { width: 190px; height: 190px; }
+  .plate b { font-size: 30px; }
+}
+@media (prefers-reduced-motion: reduce) { .plate, .howgrid > div, .cgrid a { transition: none; } }
+
+@media (max-width: 560px) {
+  .wall { grid-template-columns: 1fr; }
+  .item { grid-template-columns: 1fr; }
+  .phase { grid-template-columns: 44px 1fr; gap: 0 12px; }
+  .badge { width: 44px; height: 44px; font-size: 18px; }
+  .phase:not(:last-child)::before { left: 21px; top: 44px; }
+  .cta { padding: 22px; }
+}
+@media (prefers-reduced-motion: reduce) { .rise, .pulse { animation: none; } html { scroll-behavior: auto; } }
+</style>
+
+<header class="bar">
+  <div class="wrap">
+    <strong>Hassan Karim &rarr; CrewForge HQ</strong>
+    <nav aria-label="Sections">
+      <a href="#found">What I found</a><a href="#plan">The plan</a><a href="#timeline">Timeline</a><a href="#work">Work</a><a href="#fees">Investment</a><a href="#faq">FAQ</a><a href="#about">About me</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero rise"><div class="hero-grid"><div class="hero-copy">
+    <div class="label">Proposal for OmniAlpha Labs, LLC &middot; 20 October 2026</div>
+    <h1>Your free-trial button opens a <em>staging build</em>.</h1>
+    <p class="lede">The idea behind CrewForge HQ is strong. The site around it has a handful of problems that cost you sign-ups and create risk before launch. I would like to fix them, in the order that protects you first.</p>
+    </div><div class="stage" aria-hidden="true"><canvas id="scene"></canvas><div class="stage-cap label">Illustration: missed call, then text-back</div></div></div><div class="code" role="img" aria-label="The trial button link points to a Vercel preview deployment of the develop branch with a share token">
+      <div class="row dim">// Start Your 14 Day Free Trial &rarr; href</div>
+      <div class="row"><span class="pulse"></span><span class="bad">crewforgehq-git-develop-omnialphalabs-projects.vercel.app</span></div>
+      <div class="row dim">?_vercel_share=<span class="bad">&hellip;</span> &nbsp;<span class="k">// branch: develop, private share token in a public link</span></div>
+    </div>
+    <div class="glance" aria-label="At a glance">
+      <div><b>6 weeks</b><span>to a launch-ready site</span></div>
+      <div><b>4 phases</b><span>approved one at a time</span></div>
+      <div><b>Fixed fee</b><span>agreed before each phase</span></div>
+      <div><b>38</b><span>projects linked below</span></div>
+    </div>
+    <div class="from"><span>Prepared by <b>Hassan Karim</b>, full-stack developer</span><span>Reviewed site: crewforgehq.com</span></div>
+  </div>
+
+  <section id="found">
+    <div class="label">What I found</div>
+    <h2>Thirteen issues, four that matter most</h2>
+    <p class="lede">I read the homepage, How It Works, About Us, Privacy and Terms. I did not submit the contact form or open the trial link behind its login, so I will confirm those with you on day one.</p>
+    <div class="ledger">
+      <div class="item"><span class="pill crit">Critical</span><div><h3>Trial link points at a development build</h3><p>The main button leads to a Vercel preview of the develop branch. Visitors may hit an error or a login, and a staging build with its share token is public.</p></div></div>
+      <div class="item"><span class="pill crit">Critical</span><div><h3>Two offers at once</h3><p>The top of the page offers a 14-day free trial. The bottom says early access, &ldquo;Reserve Your Spot&rdquo; and limited founding spots. Visitors cannot tell what they are signing up for.</p></div></div>
+      <div class="item"><span class="pill crit">Critical</span><div><h3>SMS consent does not match the product</h3><p>Your policies say people consent by ticking a box on a website form. The product texts callers who phoned and missed the call, and they never saw that form. This is a carrier-registration and legal risk for your counsel to review.</p></div></div>
+      <div class="item"><span class="pill crit">Critical</span><div><h3>No way to contact the company</h3><p>Privacy and Terms send people to &ldquo;the contact information on our website&rdquo;, but the site shows no email, phone, address or named person.</p></div></div>
+      <div class="item"><span class="pill high">High</span><div><h3>Hidden pricing, no proof, unexplained claims</h3><p>No price or range, no testimonials, demo, team or example page. &ldquo;Within seconds&rdquo; and &ldquo;works with your existing number&rdquo; are never explained or shown.</p></div></div>
+      <div class="item"><span class="pill high">High</span><div><h3>Thin legal pages</h3><p>No effective date, no legal entity in the body, nothing on data retention, deletion requests, refunds or cancellation.</p></div></div>
+      <div class="item"><span class="pill low">Medium / Low</span><div><h3>Housekeeping</h3><p>Template text in &ldquo;Our Philosophy&rdquo;, duplicated sections, a 2025 copyright, one page title and description on every page, a &ldquo;Jax 2.0&rdquo; image label, and an inconsistent list of trades.</p></div></div>
+    </div>
+  </section>
+
+  <section id="plan">
+    <div class="label">The plan</div>
+    <h2>Four phases, approved one at a time</h2>
+    <p class="lede">Each phase stands alone. Phase 1 can start the day you say yes.</p>
+    <div class="phases">
+      <div class="phase"><div class="badge">1</div><div>
+        <div class="when">Week 1</div><h3>Quick fixes</h3>
+        <ul>
+          <li>Move the trial button to a production URL on your own domain (for example app.crewforgehq.com).</li>
+          <li>Revoke the exposed preview share link and turn on protection for preview deployments.</li>
+          <li>Settle the offer: a live free trial or a founding waitlist, worded the same on every page.</li>
+          <li>Add a contact page and footer details, and link them from Privacy and Terms.</li>
+          <li>Remove template text, duplicate sections and internal labels; update the copyright year.</li>
+        </ul><div class="done"><div><b>Done when</b><p>The trial button opens a working page on your own domain in a private browser window. The old preview link no longer works. One offer appears on every page. The contact page is live and linked from Privacy and Terms.</p></div><div><b>You provide</b><p>Access to Framer, Vercel and the domain. Your decision: live trial or founding waitlist.</p></div></div></div></div>
+      <div class="phase"><div class="badge">2</div><div>
+        <div class="when">Weeks 2 to 3</div><h3>Compliance and trust</h3>
+        <ul>
+          <li>Draft a consent flow that covers people texted after a missed call: opt-in on the contractor's side, a written contractor consent confirmation, identification and opt-out wording in the first message, and disclosure of automation.</li>
+          <li>Expand Privacy and Terms: dates, legal entity, retention, deletion, subprocessors, refunds and cancellation.</li>
+          <li>Prepare the pages for A2P 10DLC brand and campaign registration and support the submission with your SMS provider.</li>
+          <li>Add a plain section on how it works with an existing phone number.</li>
+        </ul><div class="done"><div><b>Done when</b><p>The consent flow and policy pages are drafted and ready for your counsel. The registration pack is complete and submitted. The &ldquo;works with your number&rdquo; section is live.</p></div><div><b>You provide</b><p>SMS provider access, your counsel&rsquo;s review, and the business details a carrier registration asks for.</p></div></div>
+        <p class="note">I am a developer, not a lawyer. Your counsel should review all consent and policy wording before it goes live.</p></div></div>
+      <div class="phase"><div class="badge">3</div><div>
+        <div class="when">Weeks 3 to 6</div><h3>Conversion and proof</h3>
+        <ul>
+          <li>A 60 to 90 second demo video and dashboard screenshots.</li>
+          <li>One live sample SEO service page as a showcase.</li>
+          <li>Pricing or a founding-member rate, an FAQ, and a team and story section.</li>
+          <li>Layout for two or three pilot customer results and quotes, once you have them.</li>
+        </ul><div class="done"><div><b>Done when</b><p>The demo, sample page, pricing, FAQ and team section are live. At least one pilot result is in place, if you have one by then.</p></div><div><b>You provide</b><p>Your pricing decision, pilot results and quotes, and team photos and short bios.</p></div></div></div></div>
+      <div class="phase"><div class="badge">4</div><div>
+        <div class="when">Monthly from week 6 &middot; optional</div><h3>Search and growth</h3>
+        <ul>
+          <li>Unique titles and descriptions, image alt text, sitemap, Open Graph images, Search Console and analytics.</li>
+          <li>One landing page per trade: plumbing, HVAC, electrical, garage door.</li>
+          <li>Funnel tracking from visit to form to trial to paying customer, with a monthly report.</li>
+        </ul><div class="done"><div><b>Done each month when</b><p>You receive a short report: traffic, trial starts, what I fixed and what I suggest next.</p></div><div><b>You provide</b><p>Approval of the landing-page topics and access to analytics.</p></div></div></div></div>
+    </div>
+  </section>
+
+  <section id="layers">
+    <div class="label">The plan, stacked</div>
+    <h2>Each phase sits on the one below it</h2>
+    <p class="lede">Fix what is broken first, then make it safe to text customers, then show proof, then grow. Spread the layers to see them apart.</p>
+    <div class="layers">
+      <div class="stackwrap" aria-hidden="true">
+        <div class="stack" id="stack">
+          <div class="plate p1" style="--i:0"><b>1</b></div>
+          <div class="plate p2" style="--i:1"><b>2</b></div>
+          <div class="plate p3" style="--i:2"><b>3</b></div>
+          <div class="plate p4" style="--i:3"><b>4</b></div>
+        </div>
+      </div>
+      <div class="legend">
+        <button class="btn alt" id="spread" type="button" aria-pressed="false">Spread the layers</button>
+        <ol>
+          <li><b>Growth</b><span>Search, trade pages, tracking. Monthly.</span></li>
+          <li><b>Proof</b><span>Demo, sample page, pricing, FAQ, team.</span></li>
+          <li><b>Safe to text</b><span>Consent flow, policies, registration.</span></li>
+          <li><b>Foundation</b><span>Real trial link, one offer, contact details.</span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section id="timeline">
+    <div class="label">Timeline</div>
+    <h2>Six weeks to a launch-ready site</h2>
+    <div class="tl">
+      <div class="tl-grid" role="table" aria-label="Phase timeline by week">
+        <div></div><div class="tl-head">Wk 1</div><div class="tl-head">Wk 2</div><div class="tl-head">Wk 3</div><div class="tl-head">Wk 4</div><div class="tl-head">Wk 5</div><div class="tl-head">Wk 6</div>
+        <div class="tl-name">1 &middot; Quick fixes</div><div class="tl-bar" style="grid-column: 2 / 3"></div><div style="grid-column: 3 / 8"></div>
+        <div class="tl-name">2 &middot; Compliance</div><div style="grid-column: 2 / 3"></div><div class="tl-bar" style="grid-column: 3 / 5"></div><div style="grid-column: 5 / 8"></div>
+        <div class="tl-name">3 &middot; Conversion</div><div style="grid-column: 2 / 4"></div><div class="tl-bar" style="grid-column: 4 / 8"></div>
+        <div class="tl-name">4 &middot; Growth</div><div style="grid-column: 2 / 7"></div><div class="tl-bar soft" style="grid-column: 7 / 8"></div>
+      </div>
+    </div>
+    <p class="note">Phase 3 depends on pilot results and on your decision about pricing. Phase 4 is a monthly retainer and can begin once Phase 3 is done.</p>
+  </section>
+
+  <section id="week">
+    <div class="label">Week one, day by day</div>
+    <h2>What happens in the first seven days</h2>
+    <ol class="days">
+      <li><div class="d">Day 1</div><div><h3>Access and kickoff</h3><p>You send access to Framer, Vercel and the domain. I confirm the two things I could not test from outside: the contact form and the trial link behind its login.</p></div></li>
+      <li><div class="d">Day 2</div><div><h3>Real trial link</h3><p>I attach a production address on your own domain, revoke the old preview share link, switch on preview protection, and test the button in a private window.</p></div></li>
+      <li><div class="d">Day 3</div><div><h3>One offer</h3><p>You choose live trial or founding waitlist. I update the hero, the bottom section and the button on every page so they say the same thing.</p></div></li>
+      <li><div class="d">Day 4</div><div><h3>Contact details</h3><p>A contact page and footer with email, phone and address, linked from Privacy and Terms.</p></div></li>
+      <li><div class="d">Day 5</div><div><h3>Clean-up</h3><p>Template text out, duplicate sections out, copyright year updated, one brand spelling, internal labels removed, a unique title and description on each page.</p></div></li>
+      <li><div class="d">Days 6 to 7</div><div><h3>Check and handover</h3><p>I test on desktop and phone, then send a short change log so your team knows what changed and where.</p></div></li>
+    </ol>
+  </section>
+
+  <section id="work">
+    <div class="label">Selected work</div>
+    <h2>38 projects you can open and judge</h2>
+    <p class="lede">Web apps, SaaS products, mobile apps and marketing sites I have worked on. Each link goes to the live site or App Store page. The full list is also in my portfolio document.</p>
+    <div class="closest">
+      <div class="label">Closest to what CrewForge needs</div>
+      <div class="cgrid">
+        <a href="https://www.illumy.com" target="_blank" rel="noopener"><b>Illumy</b><span>Messaging product</span></a>
+        <a href="https://www.synaply.io" target="_blank" rel="noopener"><b>Synaply</b><span>Sales management, custom React and Node</span></a>
+        <a href="https://mediawizzmarketing.com" target="_blank" rel="noopener"><b>MediaWizz Marketing</b><span>Marketing website</span></a>
+        <a href="https://surgedigitalmarketing.uk" target="_blank" rel="noopener"><b>Surge Digital Marketing</b><span>Marketing website</span></a>
+      </div>
+    </div>
+    <div class="wall"><div class="wgroup"><h3>Full-stack web apps <span class="cnt">22</span></h3><ul><li><a href="https://rawcaster.com" target="_blank" rel="noopener"><span class="pn">Rawcaster</span><span class="pd">live streaming</span><span class="pu">rawcaster.com</span></a></li><li><a href="https://trackhero.com" target="_blank" rel="noopener"><span class="pn">Track Hero</span><span class="pd">analytics</span><span class="pu">trackhero.com</span></a></li><li><a href="https://www.identity-links.com" target="_blank" rel="noopener"><span class="pn">Identity Links</span><span class="pd">e-commerce</span><span class="pu">identity-links.com</span></a></li><li><a href="https://www.illumy.com" target="_blank" rel="noopener"><span class="pn">Illumy</span><span class="pd">messaging</span><span class="pu">illumy.com</span></a></li><li><a href="https://www.anchor.ai" target="_blank" rel="noopener"><span class="pn">Anchor AI</span><span class="pd">AI project manager</span><span class="pu">anchor.ai</span></a></li><li><a href="https://ensek.com" target="_blank" rel="noopener"><span class="pn">ENSEK</span><span class="pd">energy SaaS</span><span class="pu">ensek.com</span></a></li><li><a href="https://www.point.me" target="_blank" rel="noopener"><span class="pn">Point.me</span><span class="pd">travel rewards</span><span class="pu">point.me</span></a></li><li><a href="https://www.rafedsa.com/en" target="_blank" rel="noopener"><span class="pn">Rafed</span><span class="pd">logistics</span><span class="pu">rafedsa.com/en</span></a></li><li><a href="https://quizillapro.com" target="_blank" rel="noopener"><span class="pn">Quizilla Pro</span><span class="pd">quiz platform</span><span class="pu">quizillapro.com</span></a></li><li><a href="https://www.tourhq.com" target="_blank" rel="noopener"><span class="pn">TourHQ</span><span class="pd">tourism</span><span class="pu">tourhq.com</span></a></li><li><a href="https://www.lybrate.com" target="_blank" rel="noopener"><span class="pn">Lybrate</span><span class="pd">health</span><span class="pu">lybrate.com</span></a></li><li><a href="https://saudigames.sa/en" target="_blank" rel="noopener"><span class="pn">Saudi Games</span><span class="pd">events</span><span class="pu">saudigames.sa/en</span></a></li><li><a href="https://livelaughlearnenrichment.com" target="_blank" rel="noopener"><span class="pn">Live Laugh Learn Enrichment</span><span class="pd">LMS</span><span class="pu">livelaughlearnenrichment.com</span></a></li><li><a href="https://www.zamaka.com.pk" target="_blank" rel="noopener"><span class="pn">Zamaka</span><span class="pd">platform</span><span class="pu">zamaka.com.pk</span></a></li><li><a href="https://contexiaa.netlify.app" target="_blank" rel="noopener"><span class="pn">Contexiaa</span><span class="pd">business management</span><span class="pu">contexiaa.netlify.app</span></a></li><li><a href="https://fatllama.com" target="_blank" rel="noopener"><span class="pn">Fat Llama</span><span class="pd">borrowing</span><span class="pu">fatllama.com</span></a></li><li><a href="https://www.teamly.com" target="_blank" rel="noopener"><span class="pn">Teamly</span><span class="pd">employee engagement</span><span class="pu">teamly.com</span></a></li><li><a href="https://mementopayments.com" target="_blank" rel="noopener"><span class="pn">Memento Payments</span><span class="pd">payments</span><span class="pu">mementopayments.com</span></a></li><li><a href="https://www.fairmint.com" target="_blank" rel="noopener"><span class="pn">Fairmint</span><span class="pd">fractional ownership</span><span class="pu">fairmint.com</span></a></li><li><a href="https://www.hipcamp.com" target="_blank" rel="noopener"><span class="pn">Hipcamp</span><span class="pd">outdoor stays</span><span class="pu">hipcamp.com</span></a></li><li><a href="https://www.peerspace.com" target="_blank" rel="noopener"><span class="pn">Peerspace</span><span class="pd">venues</span><span class="pu">peerspace.com</span></a></li><li><a href="https://dayaxe.com" target="_blank" rel="noopener"><span class="pn">Dayaxe</span><span class="pd">bookings</span><span class="pu">dayaxe.com</span></a></li></ul></div><div class="wgroup"><h3>Custom React and Node products <span class="cnt">3</span></h3><ul><li><a href="https://thetradecore.com" target="_blank" rel="noopener"><span class="pn">The Trade Core</span><span class="pd">hiring marketplace</span><span class="pu">thetradecore.com</span></a></li><li><a href="https://avaone.ca" target="_blank" rel="noopener"><span class="pn">Ava Health One</span><span class="pd">health care</span><span class="pu">avaone.ca</span></a></li><li><a href="https://www.synaply.io" target="_blank" rel="noopener"><span class="pn">Synaply</span><span class="pd">sales management</span><span class="pu">synaply.io</span></a></li></ul></div><div class="wgroup"><h3>Mobile apps <span class="cnt">5</span></h3><ul><li><a href="https://apps.apple.com/us/app/challe-activity/id6504609067" target="_blank" rel="noopener"><span class="pn">Challe Activity</span><span class="pd">iOS</span><span class="pu">apps.apple.com/us/app/challe-activity/id6504609067</span></a></li><li><a href="https://apps.apple.com/us/app/reminderlink/id6479702306" target="_blank" rel="noopener"><span class="pn">ReminderLink</span><span class="pd">iOS</span><span class="pu">apps.apple.com/us/app/reminderlink/id6479702306</span></a></li><li><a href="https://apps.apple.com/pk/app/sand-caddie-beach-rental/id6502660470" target="_blank" rel="noopener"><span class="pn">Sand Caddie</span><span class="pd">iOS</span><span class="pu">apps.apple.com/pk/app/sand-caddie-beach-rental/id6502660470</span></a></li><li><a href="https://apps.apple.com/pk/app/distrosub/id6751633808" target="_blank" rel="noopener"><span class="pn">Distrosub</span><span class="pd">iOS</span><span class="pu">apps.apple.com/pk/app/distrosub/id6751633808</span></a></li><li><a href="https://apps.apple.com/pk/app/comet-what-to-do-right-now/id6505089727" target="_blank" rel="noopener"><span class="pn">Comet</span><span class="pd">iOS</span><span class="pu">apps.apple.com/pk/app/comet-what-to-do-right-now/id6505089727</span></a></li></ul></div><div class="wgroup"><h3>Website designs <span class="cnt">8</span></h3><ul><li><a href="https://magicautowraps.com" target="_blank" rel="noopener"><span class="pn">Magic Car Wrap</span><span class="pd">website</span><span class="pu">magicautowraps.com</span></a></li><li><a href="https://mediawizzmarketing.com" target="_blank" rel="noopener"><span class="pn">MediaWizz Marketing</span><span class="pd">website</span><span class="pu">mediawizzmarketing.com</span></a></li><li><a href="https://surgedigitalmarketing.uk" target="_blank" rel="noopener"><span class="pn">Surge Digital Marketing</span><span class="pd">website</span><span class="pu">surgedigitalmarketing.uk</span></a></li><li><a href="https://pillow-t.com" target="_blank" rel="noopener"><span class="pn">Pillow T</span><span class="pd">website</span><span class="pu">pillow-t.com</span></a></li><li><a href="https://www.begreatbehappy.com" target="_blank" rel="noopener"><span class="pn">Be Great Be Happy</span><span class="pd">website</span><span class="pu">begreatbehappy.com</span></a></li><li><a href="https://www.skillsvalley.edu.pk" target="_blank" rel="noopener"><span class="pn">Skills Valley</span><span class="pd">website</span><span class="pu">skillsvalley.edu.pk</span></a></li><li><a href="https://grizlis.me" target="_blank" rel="noopener"><span class="pn">Grizlis</span><span class="pd">website</span><span class="pu">grizlis.me</span></a></li><li><a href="https://voxcity.com" target="_blank" rel="noopener"><span class="pn">Vox City</span><span class="pd">website</span><span class="pu">voxcity.com</span></a></li></ul></div></div>
+    <div class="btns"><a class="btn alt" href="https://docs.google.com/document/d/1ekyD3jcK_xvrrTMAGjMyoU9J60MHYo4tQcM1gRrQCZs/edit?usp=sharing" target="_blank" rel="noopener">Open my full portfolio</a></div>
+  </section>
+
+  <section id="fees">
+    <div class="label">Investment</div>
+    <h2>Fixed fee per phase</h2>
+    <p class="lede">Each fee is agreed before the phase starts. Phases 1 to 3 are one-off; Phase 4 is monthly.</p>
+    <div class="fees">
+      <div class="fee"><span>1 &middot; Quick fixes</span><span class="tbc">to be confirmed</span></div>
+      <div class="fee"><span>2 &middot; Compliance and trust</span><span class="tbc">to be confirmed</span></div>
+      <div class="fee"><span>3 &middot; Conversion and proof</span><span class="tbc">to be confirmed</span></div>
+      <div class="fee"><span>4 &middot; Search and growth, per month</span><span class="tbc">to be confirmed</span></div>
+    </div>
+    <p class="note">Assumes access to Framer, Vercel, your domain and your SMS provider, and that you supply pilot customer results. Pricing and legal decisions are yours.</p>
+  </section>
+
+  <section id="how">
+    <div class="label">How we will work</div>
+    <h2>What is included in every phase</h2>
+    <div class="howgrid">
+      <div><h3>Weekly written update</h3><p>What was done, what is next, and anything I need from you.</p></div>
+      <div><h3>One shared task list</h3><p>You can see every item and its status without asking.</p></div>
+      <div><h3>Staging before live</h3><p>You review changes before they go on the public site.</p></div>
+      <div><h3>Two revision rounds</h3><p>Per deliverable, so feedback has a clear place to land.</p></div>
+      <div><h3>One business day</h3><p>Maximum wait for a reply to a question or message from you.</p></div>
+      <div><h3>Handover notes</h3><p>A plain-language record so your team can maintain it afterwards.</p></div>
+    </div>
+  </section>
+
+  <section id="risks">
+    <div class="label">Risks and assumptions</div>
+    <h2>What could slow this down, and what I would do</h2>
+    <div class="risks">
+      <div class="r"><b>SMS registration is rejected or delayed</b><p>I correct the pages and resubmit. The outcome depends on the carrier&rsquo;s review, so I cannot promise approval or a date.</p></div>
+      <div class="r"><b>Your counsel needs longer than planned</b><p>Phase 2 pages are drafted for their review. Go-live waits for approval while other work carries on.</p></div>
+      <div class="r"><b>Pilot customers are not ready</b><p>Phase 3 builds the layouts with clearly marked placeholders. Real results go in when you have them.</p></div>
+      <div class="r"><b>The offer decision takes time</b><p>I prepare both versions, trial and waitlist, so switching takes minutes.</p></div>
+      <div class="r"><b>Access is delayed</b><p>I send the access checklist before day 1 so nothing waits on it.</p></div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="label">Questions</div>
+    <h2>Questions you may have</h2>
+    <dl class="faq">
+      <dt>Do you replace our Framer site?</dt><dd>No. I fix and extend it. A rebuild is possible if you want one, but nothing here needs it.</dd>
+      <dt>Will the free trial be live?</dt><dd>That is your decision. If the product is ready I point the button at production. If not, I change it to a founding waitlist.</dd>
+      <dt>Who writes the legal wording?</dt><dd>I draft it from how the product works. I am a developer, not a lawyer, so your counsel reviews it before it goes live.</dd>
+      <dt>What if we only want Phase 1?</dt><dd>That works. Each phase stands alone and has its own fee.</dd>
+      <dt>How are fees set?</dt><dd>One fixed fee per phase, agreed in writing before the phase starts.</dd>
+      <dt>What happens after Phase 3?</dt><dd>You can stop, or continue with the monthly Phase 4. There is no lock-in.</dd>
+    </dl>
+  </section>
+
+  <section id="about">
+    <div class="label">About me</div>
+    <h2>Who would do the work</h2>
+    <div class="about">
+      <p>I am Hassan Karim, a full-stack developer. Most of this plan is web work: moving a deployment to production, fixing a Framer site, adding pages, analytics and tracking. That is where I can help you most directly. The work above shows what I have shipped, from SaaS products to marketing sites.</p>
+      <p>Open the portfolio or the code before you decide:</p>
+      <div class="btns" style="margin-top:0">
+        <a class="btn alt" href="https://docs.google.com/document/d/1ekyD3jcK_xvrrTMAGjMyoU9J60MHYo4tQcM1gRrQCZs/edit?usp=sharing" target="_blank" rel="noopener">My portfolio</a>
+        <a class="btn alt" href="https://github.com/hasankhn1" target="_blank" rel="noopener">My GitHub</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="cta">
+    <div class="label">Next steps</div>
+    <h2>Ready when you are</h2>
+    <p>Tell me which phases you would like, share access to Framer, Vercel and the domain settings, and I will confirm fees and a start date. I reply within one business day.</p>
+    <div class="btns"><a class="btn main" href="https://docs.google.com/document/d/1ekyD3jcK_xvrrTMAGjMyoU9J60MHYo4tQcM1gRrQCZs/edit?usp=sharing" target="_blank" rel="noopener">See my portfolio</a><a class="btn alt" href="#plan">Review the plan again</a></div>
+    <div class="contact">Email: [ add email ] &nbsp;|&nbsp; Phone: [ add phone ]</div>
+  </div>
+
+  <footer>Hassan Karim &middot; Proposal for CrewForge HQ (OmniAlpha Labs, LLC) &middot; 20 October 2026 &middot; Confidential. This proposal is not legal advice.</footer>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function () {
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* Layer stack toggle */
+  var stack = document.getElementById("stack"), btn = document.getElementById("spread");
+  if (stack && btn) {
+    btn.addEventListener("click", function () {
+      var on = stack.classList.toggle("spread");
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+      btn.textContent = on ? "Close the layers" : "Spread the layers";
+    });
+  }
+
+  /* Tilt on the closest-work cards */
+  if (!reduce) {
+    document.querySelectorAll(".cgrid a").forEach(function (el) {
+      el.addEventListener("pointermove", function (e) {
+        var r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+        el.style.transform = "perspective(600px) rotateY(" + (x * 10).toFixed(2) + "deg) rotateX(" + (-y * 10).toFixed(2) + "deg) translateZ(6px)";
+      });
+      el.addEventListener("pointerleave", function () { el.style.transform = ""; });
+    });
+  }
+
+  /* Hero: 3D phone, missed call then text-back */
+  var canvas = document.getElementById("scene");
+  if (!canvas || !window.THREE) return;
+  var THREE = window.THREE, renderer;
+  try { renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true }); } catch (e) { return; }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(35, 1, 0.1, 50);
+  camera.position.set(0, 0, 7);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.75));
+  var key = new THREE.DirectionalLight(0xffffff, 0.9); key.position.set(2, 3, 5); scene.add(key);
+  var rim = new THREE.PointLight(0x3fc7b5, 1.2, 12); rim.position.set(-3, -1, 3); scene.add(rim);
+
+  function rr(s, x, y, w, h, r) {
+    s.moveTo(x + r, y); s.lineTo(x + w - r, y); s.absarc(x + w - r, y + r, r, -Math.PI / 2, 0, false);
+    s.lineTo(x + w, y + h - r); s.absarc(x + w - r, y + h - r, r, 0, Math.PI / 2, false);
+    s.lineTo(x + r, y + h); s.absarc(x + r, y + h - r, r, Math.PI / 2, Math.PI, false);
+    s.lineTo(x, y + r); s.absarc(x + r, y + r, r, Math.PI, Math.PI * 1.5, false);
+  }
+  var shape = new THREE.Shape(); rr(shape, -0.65, -1.35, 1.3, 2.7, 0.22);
+  var geo = new THREE.ExtrudeGeometry(shape, { depth: 0.16, bevelEnabled: true, bevelThickness: 0.03, bevelSize: 0.03, bevelSegments: 4, curveSegments: 24 });
+  geo.center();
+  var phone = new THREE.Group();
+  phone.add(new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: 0x1a2b36, metalness: 0.45, roughness: 0.35 })));
+  var edges = new THREE.LineSegments(new THREE.EdgesGeometry(geo, 35), new THREE.LineBasicMaterial({ color: 0x3fc7b5, transparent: true, opacity: 0.55 }));
+  phone.add(edges);
+
+  var sc = document.createElement("canvas"); sc.width = 512; sc.height = 1024;
+  var ctx = sc.getContext("2d");
+  var tex = new THREE.CanvasTexture(sc);
+  var screen = new THREE.Mesh(new THREE.PlaneGeometry(1.16, 2.32), new THREE.MeshBasicMaterial({ map: tex }));
+  screen.position.z = 0.125; phone.add(screen);
+  scene.add(phone);
+
+  function bubble(x, y, w, lines, bg, fg, right) {
+    ctx.font = "600 27px system-ui, sans-serif";
+    var h = 28 + lines.length * 36, bx = right ? 512 - 36 - w : 36;
+    ctx.fillStyle = bg; ctx.beginPath();
+    var r = 22; ctx.moveTo(bx + r, y); ctx.arcTo(bx + w, y, bx + w, y + h, r); ctx.arcTo(bx + w, y + h, bx, y + h, r); ctx.arcTo(bx, y + h, bx, y, r); ctx.arcTo(bx, y, bx + w, y, r); ctx.fill();
+    ctx.fillStyle = fg; ctx.textAlign = "left";
+    lines.forEach(function (l, i) { ctx.fillText(l, bx + 20, y + 42 + i * 36); });
+    return y + h;
+  }
+  function drawScreen(state) {
+    ctx.clearRect(0, 0, 512, 1024);
+    if (state === "missed") {
+      var g = ctx.createLinearGradient(0, 0, 0, 1024); g.addColorStop(0, "#1b1013"); g.addColorStop(1, "#33171a");
+      ctx.fillStyle = g; ctx.fillRect(0, 0, 512, 1024);
+      ctx.fillStyle = "#fff"; ctx.font = "600 26px system-ui, sans-serif"; ctx.textAlign = "left"; ctx.fillText("9:41", 36, 54);
+      ctx.fillStyle = "#c0392b"; ctx.beginPath(); ctx.arc(256, 340, 96, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = "#fff"; ctx.lineWidth = 12; ctx.lineCap = "round";
+      ctx.beginPath(); ctx.moveTo(216, 300); ctx.lineTo(296, 380); ctx.moveTo(296, 300); ctx.lineTo(216, 380); ctx.stroke();
+      ctx.textAlign = "center"; ctx.fillStyle = "#fff"; ctx.font = "700 52px system-ui, sans-serif"; ctx.fillText("Missed call", 256, 510);
+      ctx.fillStyle = "#e8b9b4"; ctx.font = "500 34px system-ui, sans-serif"; ctx.fillText("(555) 014-2290", 256, 566);
+      ctx.font = "500 28px system-ui, sans-serif"; ctx.fillText("2:14 PM", 256, 612);
+      ctx.fillStyle = "#8d6d6a"; ctx.font = "500 24px system-ui, sans-serif"; ctx.fillText("Example number", 256, 960);
+    } else {
+      ctx.fillStyle = "#0f1a22"; ctx.fillRect(0, 0, 512, 1024);
+      ctx.fillStyle = "#15303a"; ctx.fillRect(0, 0, 512, 150);
+      ctx.fillStyle = "#fff"; ctx.textAlign = "left"; ctx.font = "600 24px system-ui, sans-serif"; ctx.fillText("9:41", 36, 46);
+      ctx.font = "700 36px system-ui, sans-serif"; ctx.fillText("Example Plumbing", 36, 106);
+      var y = bubble(0, 190, 400, ["Sorry we missed your call.", "What do you need help with?"], "#0b7f72", "#fff", false);
+      ctx.fillStyle = "#7f98a5"; ctx.font = "500 22px system-ui, sans-serif"; ctx.fillText("Sent seconds after the call", 40, y + 34);
+      y = bubble(0, y + 64, 380, ["Water heater is leaking"], "#2b3b46", "#fff", true);
+      bubble(0, y + 30, 420, ["Got it. We can be there", "after 3. What is the address?"], "#0b7f72", "#fff", false);
+      ctx.fillStyle = "#587080"; ctx.textAlign = "center"; ctx.font = "500 24px system-ui, sans-serif"; ctx.fillText("Example conversation", 256, 980);
+    }
+    tex.needsUpdate = true;
+  }
+
+  var rings = [];
+  for (var i = 0; i < 3; i++) {
+    var m = new THREE.Mesh(new THREE.TorusGeometry(1, 0.014, 8, 120), new THREE.MeshBasicMaterial({ color: 0xff6b5e, transparent: true, opacity: 0, depthWrite: false }));
+    m.position.z = -0.3; scene.add(m); rings.push(m);
+  }
+  var cMiss = new THREE.Color(0xff6b5e), cText = new THREE.Color(0x3fc7b5), cur = new THREE.Color(0xff6b5e);
+
+  function size() {
+    var w = canvas.clientWidth || 300, h = canvas.clientHeight || 360;
+    renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+  }
+  var mx = 0, my = 0;
+  var hero = canvas.parentElement.parentElement;
+  hero.addEventListener("pointermove", function (e) {
+    var r = canvas.getBoundingClientRect();
+    mx = ((e.clientX - r.left) / r.width - 0.5) * 2; my = ((e.clientY - r.top) / r.height - 0.5) * 2;
+  });
+
+  var state = reduce ? "text" : "missed", cycle = 8, running = true, t0 = performance.now();
+  drawScreen(state);
+  function frame(now) {
+    var t = (now - t0) / 1000, ph = t % cycle, want = ph < 4 ? "missed" : "text";
+    if (want !== state) { state = want; drawScreen(state); }
+    cur.lerp(state === "missed" ? cMiss : cText, 0.06);
+    var pulse = state === "text" && ph < 4.6 ? 1 + (4.6 - ph) * 0.06 : 1;
+    phone.scale.setScalar(pulse);
+    phone.rotation.y = Math.sin(t * 0.55) * 0.5 + mx * 0.35;
+    phone.rotation.x = -0.08 + my * 0.2 + Math.sin(t * 0.8) * 0.03;
+    phone.position.y = Math.sin(t * 1.1) * 0.06;
+    rings.forEach(function (r, k) {
+      var p = ((t * 0.45) + k / 3) % 1;
+      r.scale.setScalar(0.9 + p * 1.5); r.material.opacity = (1 - p) * 0.65; r.material.color.copy(cur);
+      r.rotation.y = phone.rotation.y * 0.4;
+    });
+    renderer.render(scene, camera);
+  }
+  function loop(now) { if (running) frame(now); requestAnimationFrame(loop); }
+  size();
+  if (window.ResizeObserver) new ResizeObserver(function () { size(); if (reduce) frame(performance.now()); }).observe(canvas);
+  else window.addEventListener("resize", size);
+  if (reduce) { frame(performance.now()); return; }
+  if (window.IntersectionObserver) new IntersectionObserver(function (es) { running = es[0].isIntersecting; }).observe(canvas);
+  requestAnimationFrame(loop);
+})();
+</script>
+
+</body></html>
